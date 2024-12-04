@@ -4,7 +4,21 @@ from app import app
 from models import db, Plant
 
 class TestPlant:
-    '''Flask application in app.py'''
+    def setup_method(self, method):
+        with app.app_context():
+            # Clear existing data
+            db.session.query(Plant).delete()
+            
+            # Create a test plant
+            test_plant = Plant(
+                name="Test Plant",
+                image="test_image.jpg",
+                price=10.00,
+                is_in_stock=True
+            )
+            db.session.add(test_plant)
+            db.session.commit()
+
 
     def test_plant_by_id_get_route(self):
         '''has a resource available at "/plants/<int:id>".'''
